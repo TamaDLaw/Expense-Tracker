@@ -1,22 +1,22 @@
 name: Pipeline DevSecOps
 
-# Pipeline akan berjalan otomatis setiap ada perubahan di branch 'master'
+# Pipeline akan berjalan otomatis setiap ada kode baru di branch main atau master
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "main", "master" ]
 
 jobs:
   sast_scan:
     name: Pemindaian SAST (Bandit)
     runs-on: ubuntu-latest
     steps:
-      # 1. Mengambil kodemu dari repositori
+      # 1. Mengambil kodemu dari repositori (Diupdate ke v4)
       - name: Mengambil Source Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      # 2. Menyiapkan Python
+      # 2. Menyiapkan environment Python (Diupdate ke v5)
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.9'
 
@@ -27,11 +27,10 @@ jobs:
       # 4. Menjalankan Bandit untuk mencari kerentanan keamanan
       - name: Menjalankan Scan SAST
         run: bandit -r . -f html -o bandit-report.html || true 
-        # (Catatan: '|| true' mencegah pipeline langsung gagal jika menemukan error)
 
-      # 5. Menyimpan hasil laporan (report) agar bisa kamu download
+      # 5. Menyimpan hasil laporan (report) agar bisa kamu download (Diupdate ke v4)
       - name: Upload Laporan SAST
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Laporan-SAST-Bandit
           path: bandit-report.html
